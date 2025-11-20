@@ -8,10 +8,14 @@ class TextType(Enum):
     IMAGE = "image"
     PLAIN = "plain text"
 
+
 class TextNode:
     def __init__(self, text, text_type, url=None):
         self.text = text
-        self.text_type = TextType(text_type)
+        try:
+            self.text_type = TextType(text_type)
+        except ValueError:
+            raise Exception("Unknown node type")
         self.url = url
     def __eq__(self, other):
         return self.text == other.text and self.text_type == other.text_type and self.url == other.url

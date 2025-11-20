@@ -1,6 +1,12 @@
 import unittest
 
-from htmlnode import HTMLNode, LeafNode
+from htmlnode import HTMLNode, LeafNode, ParentNode
+global LOREM_IPSUM
+LOREM_IPSUM = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et \
+dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip \
+ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu \
+fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt \
+mollit anim id est laborum"
 
 class TestHTMLNode(unittest.TestCase):
     def test_1(self):
@@ -40,3 +46,36 @@ class TestLeafNode(unittest.TestCase):
         with self.assertRaises(TypeError):
             LeafNode(tag="p", value="Click me!", children=["<b>This was for real</b>"], props=None)
 
+
+class TestParentNode(unittest.TestCase):
+    def test_1(self):
+        parent = ParentNode(tag="p", children=[LeafNode("p", value=LOREM_IPSUM)])
+        expected_value = f'<p><p>{LOREM_IPSUM}</p></p>'
+        self.assertEqual(parent.to_html(), expected_value)
+    def test_2(self):
+        parent = ParentNode(tag="p", children=[LeafNode("b", "This is a test"),
+                                               LeafNode("p", value=LOREM_IPSUM)])
+        expected_value = f'<p><b>This is a test</b><p>{LOREM_IPSUM}</p></p>'
+        self.assertEqual(parent.to_html(), expected_value)
+    def test_3(self):
+        parent = ParentNode(tag="p", children=[LeafNode("b", "This is a test"),
+                                               LeafNode("p", value=LOREM_IPSUM),
+                                               LeafNode("a", value="Source", props={"href": "https://loremipsum.io"})])
+        expected_value = f'<p><b>This is a test</b><p>{LOREM_IPSUM}</p><a href="https://loremipsum.io">Source</a></p>'
+        self.assertEqual(parent.to_html(), expected_value)
+    def test_4(self):
+        parent = ParentNode(tag="p", children=[LeafNode("b", "This is a test"),
+                                               ParentNode("p", children=[LeafNode("p", value=LOREM_IPSUM),
+                                                                         LeafNode("a", value="Source",
+                                                                                  props={"href": "https://loremipsum.io"})])])
+        expected_value = f'<p><b>This is a test</b><p><p>{LOREM_IPSUM}</p><a href="https://loremipsum.io">Source</a></p></p>'
+        self.assertEqual(parent.to_html(), expected_value)
+    def test_5(self):
+        with self.assertRaises(TypeError):
+            ParentNode(tag="p", value="Click me!", children=["<b>This was for real</b>"], props=None)
+    def test_6(self):
+        with self.assertRaises(ValueError):
+            ParentNode(tag="p", children=None, props=None)
+    def test_7(self):
+        with self.assertRaises(ValueError):
+            ParentNode(tag=None, children=["<b>This was for real</b>"], props=None)
