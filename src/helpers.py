@@ -1,5 +1,6 @@
 from textnode import *
 from htmlnode import *
+import re
 
 def text_node_to_html_node(text_node):
     match text_node.text_type:
@@ -37,3 +38,18 @@ def split_nodes_delimited(old_nodes, delimiter, text_type):
                         temp_nodes.append(TextNode(new_text[i], TextType.PLAIN))
             new_nodes.extend(temp_nodes)
     return new_nodes
+
+def extract_markdown_images(text):
+    markdown_tuples = []
+    images = re.findall(r"!\[([^\[\]]*)\]\(([^\(\)]*)\)")
+    alt_text= re.findall(r"(?<!!)\[([^\[\]]*)\]\(([^\(\)]*)\)")
+    if len(images) != len(alt_text):
+        raise Exception("Images must provide alt text")
+    for i in range(len(images)):
+        markdown_tuples.append((images[i], alt_text[i]))
+    return markdown_tuples
+
+
+
+
+
