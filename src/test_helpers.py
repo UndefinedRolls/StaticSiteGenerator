@@ -79,7 +79,6 @@ class TestMarkdown2Text(unittest.TestCase):
         with self.assertRaises(Exception):
             node = TextNode("_This_ is a text node with an _italic word at the front", TextType.PLAIN)
             split_nodes_delimited([node], "_", TextType.ITALIC)
-    def test_7(self):
-        pass
+
 if __name__ == "__main__":
     unittest.main()
