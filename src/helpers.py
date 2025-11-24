@@ -55,22 +55,34 @@ def extract_markdown_links(text):
 
 def split_nodes_image(old_nodes):
     new_nodes = []
-    temp_nodes = []
-    image_nodes = []
-    image_alts = []
-    image_links = []
     for node in old_nodes:
+        original_text = node.text
         if node.text_type != TextType.PLAIN:
             new_nodes.append(node)
         else:
             markdown_split = extract_markdown_images(node.text)
-            print(f"found images: {markdown_split}")
-            for i in range(len(markdown_split)):
-                image_alts.append(markdown_split[i][0])
-                image_links.append(markdown_split[i][1])
-                image_nodes.append(TextNode(image_alts[i], TextType.IMAGE, image_links[i]))
-
-    print(new_nodes)
+            new_nodes.extend(split_nodes_helper(text = original_text, text_type = TextType.IMAGE, matches = markdown_split,delimiter = "!["))
     return new_nodes
 
+def split_nodes_links(old_nodes):
+    new_nodes = []
+    for node in old_nodes:
+        original_text = node.text
+        if node.text_type != TextType.PLAIN:
+            new_nodes.append(node)
+        else:
+            markdown_split = extract_markdown_links(node.text)
+            new_nodes.extend(split_nodes_helper(text = original_text, text_type = TextType.LINK, matches = markdown_split,delimiter = "["))
+    return new_nodes
 
+def split_nodes_helper(text, text_type, matches, delimiter):
+    new_nodes = []
+    for alt, url in matches:
+        split_text = text.split(f"{delimiter}{alt}]({url})", 1)
+        text = split_text[-1]
+        if split_text[0] != "":
+            new_nodes.append(TextNode(split_text[0], TextType.PLAIN))
+        new_nodes.append(TextNode(alt, text_type, url))
+    if text:
+        new_nodes.append(TextNode(text, TextType.PLAIN))
+    return new_nodes
