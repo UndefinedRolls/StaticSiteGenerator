@@ -41,15 +41,36 @@ def split_nodes_delimited(old_nodes, delimiter, text_type):
 
 def extract_markdown_images(text):
     markdown_tuples = []
-    images = re.findall(r"!\[([^\[\]]*)\]\(([^\(\)]*)\)")
-    alt_text= re.findall(r"(?<!!)\[([^\[\]]*)\]\(([^\(\)]*)\)")
-    if len(images) != len(alt_text):
-        raise Exception("Images must provide alt text")
+    images = re.findall(r"!\[([^\[\]]*)\]\(([^\(\)]*)\)", text)
     for i in range(len(images)):
-        markdown_tuples.append((images[i], alt_text[i]))
+        markdown_tuples.append(images[i])
     return markdown_tuples
 
+def extract_markdown_links(text):
+    markdown_tuples = []
+    links = re.findall(r"(?<!!)\[([^\[\]]*)\]\(([^\(\)]*)\)", text)
+    for i in range(len(links)):
+        markdown_tuples.append(links[i])
+    return markdown_tuples
 
+def split_nodes_image(old_nodes):
+    new_nodes = []
+    temp_nodes = []
+    image_nodes = []
+    image_alts = []
+    image_links = []
+    for node in old_nodes:
+        if node.text_type != TextType.PLAIN:
+            new_nodes.append(node)
+        else:
+            markdown_split = extract_markdown_images(node.text)
+            print(f"found images: {markdown_split}")
+            for i in range(len(markdown_split)):
+                image_alts.append(markdown_split[i][0])
+                image_links.append(markdown_split[i][1])
+                image_nodes.append(TextNode(image_alts[i], TextType.IMAGE, image_links[i]))
 
+    print(new_nodes)
+    return new_nodes
 
 
