@@ -8,6 +8,7 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/helpers.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/helpers.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test_helpers.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/test_helpers.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/textnode.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/textnode.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -52,7 +53,6 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-js-predefined-d6986cc7102b-3aa1da707db6-JavaScript-PY-252.27397.106" />
         <option value="bundled-python-sdk-4e2b1448bda8-9a97661f3031-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-252.27397.106" />
       </set>
     </attachedChunks>
@@ -66,7 +66,7 @@
       <updated>1763574605832</updated>
       <workItem from="1763574606790" duration="35645000" />
       <workItem from="1764017967132" duration="1217000" />
-      <workItem from="1764019391465" duration="5548000" />
+      <workItem from="1764019391465" duration="7346000" />
     </task>
     <servers />
   </component>

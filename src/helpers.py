@@ -86,3 +86,49 @@ def split_nodes_helper(text, text_type, matches, delimiter):
     if text:
         new_nodes.append(TextNode(text, TextType.PLAIN))
     return new_nodes
+
+def text_to_textnodes(text):
+    new_nodes = []
+    text_node = TextNode(text, TextType.PLAIN)
+    new_nodes.append(text_node)
+    new_nodes = split_nodes_delimited(new_nodes, "**", TextType.BOLD)
+    new_nodes = split_nodes_delimited(new_nodes, "_", TextType.ITALIC)
+    new_nodes = split_nodes_delimited(new_nodes, "`", TextType.CODE)
+    new_nodes = split_nodes_image(new_nodes)
+    new_nodes = split_nodes_links(new_nodes)
+    return new_nodes
+
+def markdown_to_blocks(markdown):
+    raw_blocks = markdown.split("\n\n")
+    blocks = []
+    for block in raw_blocks:
+        cleaned = block.strip()
+        if cleaned != "":
+            blocks.append(cleaned)
+    return blocks
+
+def is_heading(line):
+    if not line.startswith("#"):
+        return False
+    marks = 0
+    for mark in line:
+        if mark == "#":
+            marks += 1
+        else:
+            break
+    if not (1 <= marks <= 6):
+        return False
+    return len(line) > marks and line[marks] == " "
+def is_code_block(markdown):
+    return markdown.startswith("```") and markdown.endswith("```")
+def is_quote(lines):
+    return all(line.startswith(">") for line in lines)
+def is_unordered_list(lines):
+    return all(line.startswith("- ") for line in lines)
+def is_ordered_list(lines):
+    order = 1
+    for line in lines:
+        if not line.startswith(f"{order}. "):
+            return False
+        order += 1
+    return True

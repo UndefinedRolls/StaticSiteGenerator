@@ -260,7 +260,7 @@ class TestCreateImageNodes(unittest.TestCase):
             ],
             new_nodes,
         )
-    def test_8(self):
+    def test_9(self):
         node = TextNode(
             "![image](https://i.imgur.com/zjjcJKZ.png)",
             TextType.PLAIN,
@@ -415,5 +415,236 @@ class TestCreateLinkNodes(unittest.TestCase):
             ],
             new_nodes,
         )
-if __name__ == "__main__":
-    unittest.main()
+
+class TestTexttoNodes(unittest.TestCase):
+    def test_1(self):
+        nodes = text_to_textnodes("This is **text** with an _italic_ word and a `code block` and an ![obi wan image](https://i.imgur.com/fJRm4Vk.jpeg) and a [link](https://boot.dev)")
+        self.assertListEqual(
+            [
+
+                    TextNode("This is ", TextType.PLAIN),
+                    TextNode("text", TextType.BOLD),
+                    TextNode(" with an ", TextType.PLAIN),
+                    TextNode("italic", TextType.ITALIC),
+                    TextNode(" word and a ", TextType.PLAIN),
+                    TextNode("code block", TextType.CODE),
+                    TextNode(" and an ", TextType.PLAIN),
+                    TextNode("obi wan image", TextType.IMAGE, "https://i.imgur.com/fJRm4Vk.jpeg"),
+                    TextNode(" and a ", TextType.PLAIN),
+                    TextNode("link", TextType.LINK, "https://boot.dev"),
+                ],
+            nodes,
+        )
+    def test_1(self):
+        nodes = text_to_textnodes("This is **text** with an _italic_ word and a `code block` and an ![obi wan image](https://i.imgur.com/fJRm4Vk.jpeg) and a [link](https://boot.dev)")
+        self.assertListEqual(
+            [
+
+                    TextNode("This is ", TextType.PLAIN),
+                    TextNode("text", TextType.BOLD),
+                    TextNode(" with an ", TextType.PLAIN),
+                    TextNode("italic", TextType.ITALIC),
+                    TextNode(" word and a ", TextType.PLAIN),
+                    TextNode("code block", TextType.CODE),
+                    TextNode(" and an ", TextType.PLAIN),
+                    TextNode("obi wan image", TextType.IMAGE, "https://i.imgur.com/fJRm4Vk.jpeg"),
+                    TextNode(" and a ", TextType.PLAIN),
+                    TextNode("link", TextType.LINK, "https://boot.dev"),
+                ],
+            nodes,
+        )
+    def test_2(self):
+        nodes = text_to_textnodes("This is _text_ with an **italic** word and an ![obi wan image](https://i.imgur.com/fJRm4Vk.jpeg) and a `code block` and a [link](https://boot.dev)")
+        self.assertListEqual(
+            [
+
+                    TextNode("This is ", TextType.PLAIN),
+                    TextNode("text", TextType.ITALIC),
+                    TextNode(" with an ", TextType.PLAIN),
+                    TextNode("italic", TextType.BOLD),
+                    TextNode(" word and an ", TextType.PLAIN),
+                    TextNode("obi wan image", TextType.IMAGE, "https://i.imgur.com/fJRm4Vk.jpeg"),
+                    TextNode(" and a ", TextType.PLAIN),
+                    TextNode("code block", TextType.CODE),
+                    TextNode(" and a ", TextType.PLAIN),
+                    TextNode("link", TextType.LINK, "https://boot.dev"),
+                ],
+            nodes,
+        )
+    def test_3(self):
+        nodes = text_to_textnodes("")
+        self.assertListEqual(
+            [
+
+            ],
+            nodes,
+        )
+    def test_4(self):
+        nodes = text_to_textnodes("**This is _nested text_ with an **italic** word and an ![obi wan image](https://i.imgur.com/fJRm4Vk.jpeg) and a `code block` and a [link](https://boot.dev)**")
+        self.maxDiff=None
+        self.assertListEqual(
+            [
+            TextNode("This is _nested text_ with an ", TextType.BOLD),
+            TextNode("italic", TextType.PLAIN),
+            TextNode(" word and an ![obi wan image](https://i.imgur.com/fJRm4Vk.jpeg) and a `code block` and a [link](https://boot.dev)", TextType.BOLD),
+], nodes
+        )
+    def test_5(self):
+        nodes = text_to_textnodes("**This is only bold text**")
+        self.maxDiff=None
+        self.assertListEqual(
+            [
+            TextNode("This is only bold text", TextType.BOLD)]
+            , nodes
+        )
+    def test_6(self):
+        nodes = text_to_textnodes("**This is only bold text ****Next to Bold Text**")
+        self.maxDiff=None
+        self.assertListEqual(
+            [
+            TextNode("This is only bold text ", TextType.BOLD),
+            TextNode("Next to Bold Text", TextType.BOLD)]
+            , nodes
+        )
+
+class TextMarkdowntoBlocks(unittest.TestCase):
+    def test_1(self):
+        md = """
+This is **bolded** paragraph
+
+This is another paragraph with _italic_ text and `code` here
+This is the same paragraph on a new line
+
+- This is a list
+- with items
+    """
+        blocks = markdown_to_blocks(md)
+        self.assertEqual(
+            blocks,
+            [
+                "This is **bolded** paragraph",
+                "This is another paragraph with _italic_ text and `code` here\nThis is the same paragraph on a new line",
+                "- This is a list\n- with items",
+            ],
+        )
+    def test_2(self):
+            md = """
+- This is a list
+- with items
+
+This is **bolded** paragraph
+
+This is another paragraph with _italic_ text and `code` here
+This is the same paragraph on a new line
+            """
+            blocks = markdown_to_blocks(md)
+            self.assertEqual(
+                blocks,
+                [
+                    "- This is a list\n- with items",
+                    "This is **bolded** paragraph",
+                    "This is another paragraph with _italic_ text and `code` here\nThis is the same paragraph on a new line",
+
+                ],
+            )
+    def test_3(self):
+            md = """
+- This is a list
+- with items
+
+This is **bolded** paragraph
+
+This is another paragraph with _italic_ text and `code` here
+This is the same paragraph on a new line with an ![obi wan image](https://i.imgur.com/fJRm4Vk.jpeg)
+            """
+            blocks = markdown_to_blocks(md)
+            self.assertEqual(
+                blocks,
+                [
+                    "- This is a list\n- with items",
+                    "This is **bolded** paragraph",
+                    "This is another paragraph with _italic_ text and `code` here\nThis is the same paragraph on a new line with an ![obi wan image](https://i.imgur.com/fJRm4Vk.jpeg)",
+
+                ],
+            )
+    def test_4(self):
+            md = """
+1. This is an ordered list
+2. with items
+and a new line in the same paragraph
+
+This is **bolded** paragraph
+
+This is another paragraph with _italic_ text and `code` here
+This is the same paragraph on a new line with an ![obi wan image](https://i.imgur.com/fJRm4Vk.jpeg)
+            """
+            blocks = markdown_to_blocks(md)
+            self.assertEqual(
+                blocks,
+                [
+                    "1. This is an ordered list\n2. with items\nand a new line in the same paragraph",
+                    "This is **bolded** paragraph",
+                    "This is another paragraph with _italic_ text and `code` here\nThis is the same paragraph on a new line with an ![obi wan image](https://i.imgur.com/fJRm4Vk.jpeg)",
+
+                ],
+            )
+    def test_5(self):
+            md = ""
+            blocks = markdown_to_blocks(md)
+            self.assertEqual(
+                blocks,
+                [
+                ],
+            )
+    def test_6(self):
+            md = " \n\n "
+            blocks = markdown_to_blocks(md)
+            self.assertEqual(
+                blocks,
+                [],
+            )
+
+    def test_7(self):
+        md = " \n\n  \n\n  beans\n\n "
+        blocks = markdown_to_blocks(md)
+        self.assertEqual(
+            blocks,
+            ["beans"],
+        )
+    def test_8(self):
+        md = "Just me, all alone"
+        blocks = markdown_to_blocks(md)
+        self.assertEqual(
+            blocks,
+            ["Just me, all alone"],
+        )
+
+    def test_9(self):
+        md = "Just me\n\n all alone"
+        blocks = markdown_to_blocks(md)
+        self.assertEqual(
+            blocks,
+            ["Just me", "all alone"],
+        )
+    def test_10(self):
+        md = "Just me\n all\nalone"
+        blocks = markdown_to_blocks(md)
+        self.assertEqual(
+            blocks,
+            ["Just me\n all\nalone"],
+        )
+    def test_11(self):
+        md = "Just me\n\n\n\nall alone"
+        blocks = markdown_to_blocks(md)
+        self.assertEqual(
+            blocks,
+            ["Just me", "all alone"],
+        )
+    def test_12(self):
+        md = "\n\nJust me\n\n\n\nall alone\n\n"
+        blocks = markdown_to_blocks(md)
+        self.assertEqual(
+            blocks,
+            ["Just me", "all alone"],
+        )
+
