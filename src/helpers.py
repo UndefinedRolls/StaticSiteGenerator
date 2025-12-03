@@ -154,3 +154,4 @@ def apply_replacements(text, replacements):
     for old, new in replacements:
         text = text.replace(old, new)
     return text
+

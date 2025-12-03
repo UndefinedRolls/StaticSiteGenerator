@@ -6,7 +6,6 @@ def markdown_to_html_node(markdown):
     html_nodes = []
     for block in blocks:
         block_type = block_to_block_type(block)
-        child_nodes = []
         match block_type:
             case BlockType.PARAGRAPH:
                 html_nodes.append(text_to_children(block, [("\n", " ")]))
@@ -20,7 +19,7 @@ def markdown_to_html_node(markdown):
                 child = LeafNode(value=text, tag="code")
                 html_nodes.append(ParentNode("pre", children = [child]))
             case BlockType.QUOTE:
-                html_nodes.append(text_to_children(block, [("\n", " "), (">", ""), ("  ", "")], "blockquote"))
+                html_nodes.append(text_to_children(block, [("\n", ""), ("> ", ""), ("  ", "")], "blockquote"))
             case BlockType.UNORDERED_LIST:
                 html_nodes.append(list_block_to_parent(block, "ul", "- "))
             case BlockType.ORDERED_LIST:

@@ -240,4 +240,41 @@ This is the same paragraph on a new line with an ![obi wan image](https://i.imgu
             blocks,
             ["Just me", "all alone"],
         )
+class TestExtractTitle(unittest.TestCase):
+    def test_1(self):
+        md = """
+        # This is a good title
+        
+        - and an unordered list
+        - because I should mix things up
+        - sometimes
+        
+        # Dontchaknow?
+        """
+        header = extract_title(md)
+        self.assertEqual(header, "This is a good title")
 
+    def test_2(self):
+        md = """
+        ## This is a bad title
+
+        - and an unordered list
+        - because I should mix things up
+        - sometimes
+
+        # Dontchaknow?
+        """
+        header = extract_title(md)
+        self.assertEqual(header, "Dontchaknow?")
+    def test_3(self):
+        md = """
+        ## This is a bad title
+
+        - and an unordered list
+        - because I should mix things up
+        - sometimes
+
+        ### Dontchaknow?
+        """
+
+        self.assertRaises(Exception, extract_title, md)

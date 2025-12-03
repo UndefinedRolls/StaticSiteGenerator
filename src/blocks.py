@@ -1,5 +1,5 @@
 from enum import Enum
-from helpers import is_heading, is_code_block, is_ordered_list, is_quote, is_unordered_list
+from helpers import *
 
 class BlockType(Enum):
     PARAGRAPH = 'paragraph'
@@ -10,7 +10,7 @@ class BlockType(Enum):
     ORDERED_LIST = 'ordered_list'
 
 def markdown_to_blocks(markdown):
-    raw_blocks = markdown.split("\n\n")
+    raw_blocks = markdown.replace("  ", "").split("\n\n")
     blocks = []
     for block in raw_blocks:
         cleaned = block.strip()
@@ -33,3 +33,13 @@ def block_to_block_type(markdown):
     if is_ordered_list(parts):
         return BlockType.ORDERED_LIST
     return BlockType.PARAGRAPH
+
+
+def extract_title(markdown):
+    block_list = markdown_to_blocks(markdown)
+    for block in block_list:
+        if block_to_block_type(block) == BlockType.HEADING:
+            marks, line = split_heading(block)
+            if marks == 1:
+                return line
+    raise Exception("Could not extract title")
