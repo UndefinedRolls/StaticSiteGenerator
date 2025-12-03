@@ -98,37 +98,59 @@ def text_to_textnodes(text):
     new_nodes = split_nodes_links(new_nodes)
     return new_nodes
 
-def markdown_to_blocks(markdown):
-    raw_blocks = markdown.split("\n\n")
-    blocks = []
-    for block in raw_blocks:
-        cleaned = block.strip()
-        if cleaned != "":
-            blocks.append(cleaned)
-    return blocks
-
 def is_heading(line):
     if not line.startswith("#"):
         return False
-    marks = 0
-    for mark in line:
-        if mark == "#":
-            marks += 1
-        else:
-            break
+    marks, _ = split_heading(line)
     if not (1 <= marks <= 6):
         return False
     return len(line) > marks and line[marks] == " "
 def is_code_block(markdown):
     return markdown.startswith("```") and markdown.endswith("```")
 def is_quote(lines):
-    return all(line.startswith(">") for line in lines)
+    return all(line.strip().startswith(">") for line in lines)
 def is_unordered_list(lines):
-    return all(line.startswith("- ") for line in lines)
+    return all(line.lstrip().startswith("- ") for line in lines)
 def is_ordered_list(lines):
     order = 1
     for line in lines:
-        if not line.startswith(f"{order}. "):
+        if not line.lstrip().startswith(f"{order}. "):
             return False
         order += 1
     return True
+
+def text_to_children(text, replacements, tag = "p") :
+    text = apply_replacements(text, replacements)
+    node_list = text_to_textnodes(text)
+    child_nodes= []
+    for node in node_list:
+        child_nodes.append(text_node_to_html_node(node))
+    return ParentNode(tag, children=child_nodes)
+
+def list_block_to_parent(block, parent_tag, bullet_prefix = None):
+    items = block.split("\n")
+    children = []
+    for i, text in enumerate(items, start = 1):
+        item = text.strip()
+        replacements = [("  ", "")]
+        if bullet_prefix is not None:
+            replacements.insert(0, (bullet_prefix, ""))
+        else:
+            replacements.insert(0, (f"{i}. ", ""))
+        children.append(text_to_children(item, replacements, "li"))
+    return ParentNode(parent_tag, children=children)
+
+def split_heading(block):
+    marks = 0
+    for mark in block:
+        if mark == "#":
+            marks += 1
+        else:
+            break
+    text = block[marks +1:]
+    return marks, text
+
+def apply_replacements(text, replacements):
+    for old, new in replacements:
+        text = text.replace(old, new)
+    return text

@@ -9,6 +9,15 @@ class BlockType(Enum):
     UNORDERED_LIST = 'unordered_list'
     ORDERED_LIST = 'ordered_list'
 
+def markdown_to_blocks(markdown):
+    raw_blocks = markdown.split("\n\n")
+    blocks = []
+    for block in raw_blocks:
+        cleaned = block.strip()
+        if cleaned != "":
+            blocks.append(cleaned)
+    return blocks
+
 def block_to_block_type(markdown):
     if not markdown:
         return BlockType.PARAGRAPH
