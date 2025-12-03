@@ -5,18 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d2b2e56f-8942-47ca-afc0-dcf9d4ba8ba0" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/static/images/glorfindel.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/static/images/rivendell.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/static/images/tom.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.sh" beforeDir="false" afterPath="$PROJECT_DIR$/main.sh" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/public/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/styles.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/blocks.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/helpers.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/helpers.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/html_helpers.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/html_helpers.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test_blocks.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/test_blocks.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

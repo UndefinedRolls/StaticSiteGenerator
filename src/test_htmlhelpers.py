@@ -74,7 +74,7 @@ This is another paragraph with _italic_ text and `code` here
         md = """
     - This is a
     - **Unordered** List
-    - By _Me_
+    - By _Me_  
     """
         self.maxDiff = None
         node = markdown_to_html_node(md)
